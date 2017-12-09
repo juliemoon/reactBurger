@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import Person from '../components/Persons/Person/Person';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
 
 class App extends Component {
 
@@ -51,14 +52,11 @@ class App extends Component {
     if (this.state.showPersons) {
       persons = (
         <div>
-          {this.state.persons.map((person,index) =>{
-            return <Person 
-            click={()=>this.deletePersonHandler(index)}
-            name={person.name}
-            age={person.age}
-            key= {index} 
-            changed= {this.nameChangedHandler}/>
-          })}
+          <Persons 
+          persons={this.state.persons}
+          clicked={this.deletePersonHandler}
+          changed={this.nameChangedHandler}
+          />
         </div>
       );
       style.backgroundColor = 'white';
@@ -67,8 +65,12 @@ class App extends Component {
     return (
       <div className="App">
         {/* pass method switchNameHandler only as ref. not invoking */}
-        <button style={style}
-          onClick={this.togglePersonsHandler}>Switch Name</button>
+        <Cockpit
+        appTitle= {this.props.title}
+        showPersons={this.state.showPersons}
+        persons={this.state.persons}
+        clicked={this.togglePersonsHandler}
+        />
         {persons}
       </div>
     );
