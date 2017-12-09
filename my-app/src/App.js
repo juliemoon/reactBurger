@@ -3,76 +3,73 @@ import './App.css';
 import Person from './Person/Person';
 
 class App extends Component {
+
   state = {
-    persons:[
-      { name: 'Julie', age:32 },
-      { name: 'Eden', age:5 },
-      { name: 'Temp', age:10 }
+    persons: [
+      { name: 'Julie', age: 32 },
+      { name: 'Eden', age: 5 },
+      { name: 'Temp', age: 10 }
     ],
     showPersons: false
   }
-  
-  switchNameHandler = (newName) => {
-    //  console.log('Was clicked!!');
-    // this keyword is safe because of es6 syntax
-    // Component object has setState method -- takes in object
-    //on button click the state will be changed!!
-    this.setState({
-      persons:[
-        { name: 'POOF CHANGED', age:32 },
-        { name: 'POOF ALSO CHANGED', age: 5 },
-        { name: newName, age: 10}
-      ]
-    }) 
-  }
+
 
   // Change the state also
   nameChangedHandler = (event) => {
     this.setState([
-      { name: 'Julie', age:32 },
-      { name: 'Eden', age:5 },
-      { name: event.target.value, age:10 }
+      { name: 'Julie', age: 32 },
+      { name: 'Eden', age: 5 },
+      { name: event.target.value, age: 10 }
     ])
   }
-  
-  togglePersonsHandler = () =>{
-    const doesShow = this.state.showPersons;
-    this.setState({showPersons: !doesShow});
+
+  deletePersonHandler = (personIndex) =>{
+    // const persons = this.state.persons.slice();
+    const persons = [...this.state.persons];
+    persons.splice(personIndex, 1);
+    this.setState({persons: persons});
   }
-   
+
+  togglePersonsHandler = () => {
+    const doesShow = this.state.showPersons;
+    this.setState({ showPersons: !doesShow });
+  }
+
   render() {
 
     const style = {
-      backgroundColor: 'white',
-      font:'inherit',
+      backgroundColor: 'black',
+      color: 'white',
+      font: 'inherit',
       border: '1px solid blue',
       padding: '8px',
       cursor: 'pointer'
     };
 
+    let persons = null;
+
+    if (this.state.showPersons) {
+      persons = (
+        <div>
+          {this.state.persons.map((person,index) =>{
+            return <Person 
+            click={()=>this.deletePersonHandler(index)}
+            name={person.name}
+            age={person.age}
+            key= {index} 
+            changed= {this.nameChangedHandler}/>
+          })}
+        </div>
+      );
+      style.backgroundColor = 'white';
+      style.color = 'black';
+    }
     return (
       <div className="App">
-      {/* pass method switchNameHandler only as ref. not invoking */}
+        {/* pass method switchNameHandler only as ref. not invoking */}
         <button style={style}
-        onClick={this.togglePersonsHandler}>Switch Name</button>
-        {this.state.showPersons ?
-        <div>
-          <h2><Person 
-          name={this.state.persons[0].name} 
-          age={this.state.persons[0].age}
-          click={this.switchNameHandler.bind(this, 'PASSING BIND AS PROPS')}>I am short</Person></h2>
-          <h2><Person name = {
-            this.state.persons[1].name} 
-            age={this.state.persons[1].age}
-            click={this.switchNameHandler}>I am short as well</Person></h2>
-            <h2><Person
-            name = {this.state.persons[2].name}
-            age = {this.state.persons[2].age}
-            click = {this.switchNameHandler}
-            changed = {this.nameChangedHandler}>
-            </Person></h2>
-        </div> : <p>NAMES ARE HIDDEN BECAUSE OF TOGGLE </p> 
-        }
+          onClick={this.togglePersonsHandler}>Switch Name</button>
+        {persons}
       </div>
     );
   }
